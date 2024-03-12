@@ -11,6 +11,8 @@ router.get("/get_post", authUser, userController.get_post);
 router.delete("/delete_post/:id", authUser, userController.delete_post);
 router.post("/update_post/:id", authUser, userController.update_post);
 
+router.post("/retrieve_post_user", authUser, userController.retrieve_post_user);
+router.post("/retrieve_post_alluser", authUser, userController.retrieve_post_alluser);
 
 router.get("/dashboard_user", authUser, userController.dashboard_user);
 router.get("/dashboard_alluser", authUser, userController.dashboard);

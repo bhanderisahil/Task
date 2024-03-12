@@ -1,5 +1,5 @@
 const { userModel } = require("../model/usermodel")
-const { registerValidation, loginvalidation ,postvalidation} = require("../middleware/validation")
+const { registerValidation, loginvalidation, postvalidation } = require("../middleware/validation")
 const HTTP = require("../../constants/responseCode.constant")
 const bcrypt = require('bcrypt')
 const Post = require("../model/postmodel")
@@ -114,6 +114,35 @@ const update_post = async (req, res) => {
         return res.status(HTTP.SUCCESS).send({ status: false, code: HTTP.INTERNAL_SERVER_ERROR, msg: "Something Went Wrong", error: error.message })
     }
 }
+const retrieve_post_user = async (req, res) => {
+    try {
+        const { lat, long } = req.body;
+        const query = {
+            createdBy: req.user.id,
+            'location.lat': { $gte: parseFloat(lat) - 0.1, $lte: parseFloat(lat) + 0.1 },
+            'location.long': { $gte: parseFloat(long) - 0.1, $lte: parseFloat(long) + 0.1 }
+        };
+        const posts = await Post.find(query);
+        return res.status(HTTP.SUCCESS).send({ status: true, code: HTTP.SUCCESS, msg: "posts",posts })
+    } catch (error) {
+        return res.status(HTTP.SUCCESS).send({ status: false, code: HTTP.INTERNAL_SERVER_ERROR, msg: "Something Went Wrong", error: error.message })
+    }
+}
+
+
+const retrieve_post_alluser = async (req, res) => {
+    try {
+        const { lat, long } = req.body;
+        const query = {
+            'location.lat': { $gte: parseFloat(lat) - 0.1, $lte: parseFloat(lat) + 0.1 },
+            'location.long': { $gte: parseFloat(long) - 0.1, $lte: parseFloat(long) + 0.1 }
+        };
+        const posts = await Post.find(query);
+        return res.status(HTTP.SUCCESS).send({ status: true, code: HTTP.SUCCESS, msg: "posts",posts })
+    } catch (error) {
+        return res.status(HTTP.SUCCESS).send({ status: false, code: HTTP.INTERNAL_SERVER_ERROR, msg: "Something Went Wrong", error: error.message })
+    }
+}
 
 const dashboard_user = async (req, res) => {
     try {
@@ -146,4 +175,6 @@ module.exports = {
     delete_post,
     dashboard_user,
     dashboard,
+    retrieve_post_user,
+    retrieve_post_alluser
 }
